@@ -1,0 +1,46 @@
+# Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.pnpm-store/
+
+# Next.js
+.next/
+out/
+*.tsbuildinfo
+next-env.d.ts
+
+# Environment
+.env
+.env*.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Foundry / Solidity
+cache/
+out/
+broadcast/
+!broadcast/.gitkeep
+
+# Deployment artifacts (ignore local deployments)
+contracts/deployments/31337.json
+web/lib/deployments/31337.json
+
+# Logs
+*.log
+
+# Testing
+coverage/
+coverage.json
+
+# Build
+dist/
+build/
