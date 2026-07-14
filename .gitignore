@@ -29,7 +29,7 @@ cache/
 out/
 broadcast/
 !broadcast/.gitkeep
-lib/
+contracts/lib/
 
 # Logs
 *.log
