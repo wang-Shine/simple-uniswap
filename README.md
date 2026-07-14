@@ -22,14 +22,14 @@ cd contracts
 forge install
 forge build
 
-# 启动本地节点（新终端）
-anvil
+# 配置环境变量(RPC、私钥等)
+cp .env.example .env
+# 编辑 .env,填入你自己的 Sepolia RPC 和测试网空钱包私钥
 
-# 部署合约
-forge script script/DeployLocal.s.sol --rpc-url localhost --broadcast
+# 部署到 Sepolia
+forge script script/Deploy.s.sol --rpc-url sepolia --broadcast --verify -vvvv
 
-# 同步地址到前端
-cp deployments/31337.json ../web/lib/deployments/31337.json
+# 把打印出的地址填到 ../web/lib/addresses.ts 的 11155111 条目
 ```
 
 ### 2. 启动前端
@@ -40,7 +40,7 @@ pnpm install
 pnpm dev
 ```
 
-访问 http://localhost:3000，在 MetaMask 中连接 `Localhost 8545 (chainId 31337)` 即可使用。
+访问 http://localhost:3000，在 MetaMask 中连接 Sepolia 或 Mainnet 即可使用。
 
 ## 功能
 

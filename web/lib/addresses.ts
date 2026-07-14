@@ -1,9 +1,4 @@
-import localDeployment from "./deployments/31337.json";
-import sepoliaDeployment from "./deployments/11155111.json";
-
 export type Deployment = {
-  chainId: number;
-  deployer: `0x${string}`;
   factory: `0x${string}`;
   router: `0x${string}`;
   pair: `0x${string}`;
@@ -11,25 +6,31 @@ export type Deployment = {
   tkb: `0x${string}`;
 };
 
+const ZERO: Deployment = {
+  factory: "0x0000000000000000000000000000000000000000",
+  router: "0x0000000000000000000000000000000000000000",
+  pair: "0x0000000000000000000000000000000000000000",
+  tka: "0x0000000000000000000000000000000000000000",
+  tkb: "0x0000000000000000000000000000000000000000",
+};
+
+// 跑完 `forge script script/Deploy.s.sol --broadcast ...` 后,
+// 把打印出的地址填到下面对应的链里
 const DEPLOYMENTS: Record<number, Deployment> = {
-  31337: localDeployment as Deployment,
-  11155111: sepoliaDeployment as Deployment,
+  11155111: ZERO, // Sepolia
+  1: ZERO, // Mainnet(学习项目未真实部署,仅占位)
 };
 
 /** 拿指定链的地址集,没部署过就返回全零 */
 export function getDeployment(chainId: number | undefined): Deployment | null {
   if (!chainId) return null;
-  const d = DEPLOYMENTS[chainId];
-  if (!d) return null;
-  // 未部署时 factory 是零地址,前端应该拦截 UI
-  if (d.factory === "0x0000000000000000000000000000000000000000") return d;
-  return d;
+  return DEPLOYMENTS[chainId] ?? null;
 }
 
 /** 判断某个 deployment 是否已经真实部署过(非零地址) */
 export function isDeployed(d: Deployment | null): boolean {
   if (!d) return false;
-  return d.factory !== "0x0000000000000000000000000000000000000000";
+  return d.factory !== ZERO.factory;
 }
 
 /** 已部署的 TestToken 列表(供 faucet 页和下拉列表用) */

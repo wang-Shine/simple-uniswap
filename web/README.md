@@ -6,7 +6,7 @@ SimpleDEX 前端。项目根 README 见 [../README.md](../README.md)。
 
 ```bash
 pnpm install
-cp .env.local.example .env.local
+cp .env.example .env.local
 pnpm dev
 ```
 
@@ -38,11 +38,10 @@ web/
 │   └── useTx.ts           # 统一写交易(带 toast)
 └── lib/
     ├── abi/               # 合约 ABI(手写最小可用集)
-    ├── addresses.ts       # 部署地址查询
+    ├── addresses.ts       # 部署地址(合约部署完手动填进去)
     ├── amm.ts             # 前端 AMM 数学(和 SimpleLibrary.sol 一致)
     ├── utils.ts           # cn / formatUnits / parseUnits / deadline / 滑点
-    ├── wagmi.ts           # wagmi + chains 配置
-    └── deployments/       # 各链地址 JSON(部署完拷贝进来)
+    └── wagmi.ts           # wagmi + chains 配置
 ```
 
 ## 常用命令
@@ -59,9 +58,8 @@ web/
 `.env.local`:
 
 ```
-NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID=YOUR_PROJECT_ID   # https://cloud.walletconnect.com
-NEXT_PUBLIC_SEPOLIA_RPC=                               # 可选,覆盖默认公共节点
-NEXT_PUBLIC_LOCAL_RPC=http://127.0.0.1:8545
+NEXT_PUBLIC_REOWN_PROJECT_ID=YOUR_PROJECT_ID   # https://cloud.reown.com
+NEXT_PUBLIC_SEPOLIA_RPC=                       # 可选,覆盖默认公共节点
 ```
 
 不填 projectId 也能跑,但不推荐(RainbowKit 会警告)。

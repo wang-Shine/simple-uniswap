@@ -29,10 +29,7 @@ cache/
 out/
 broadcast/
 !broadcast/.gitkeep
-
-# Deployment artifacts (ignore local deployments)
-contracts/deployments/31337.json
-web/lib/deployments/31337.json
+lib/
 
 # Logs
 *.log

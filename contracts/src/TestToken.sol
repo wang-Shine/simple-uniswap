@@ -15,7 +15,6 @@ import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
  *                      方便部署脚本 / 测试搭初始场景
  *
  *      hasClaimed 是"地址 → 是否已领"的映射,一旦置为 true 就再也不能领了。
- *      本地开发想再领的话,重启 Anvil 会清空所有链上状态。
  */
 contract TestToken is ERC20, Ownable {
     // 每次 faucet 领取的数量:1000 个,考虑 18 位小数就是 1000 * 1e18

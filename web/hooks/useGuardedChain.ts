@@ -29,7 +29,7 @@ export function useGuardedChain(): {
     reason = "请先连接钱包";
   } else if (!deployment) {
     ready = false;
-    reason = `未支持 chain ${chainId ?? "?"},请切到 foundry(31337) 或 sepolia`;
+    reason = `未支持 chain ${chainId ?? "?"},请切到 sepolia 或 mainnet`;
   } else if (!deployed) {
     ready = false;
     reason = `chain ${chainId} 上还没部署,先跑 forge script`;
