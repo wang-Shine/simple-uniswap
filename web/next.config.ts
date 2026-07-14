@@ -6,6 +6,9 @@ const nextConfig: NextConfig = {
   webpack: (config) => {
     // rainbowkit 依赖 pino-pretty 但只在浏览器不必要
     config.externals.push("pino-pretty");
+    // @metamask/sdk 里有条 React Native 分支会 import 这个包,纯 Web 项目用不到,
+    // 用 alias 指向 false 让 webpack 把它当空模块处理,避免 Module not found 报错
+    config.resolve.alias["@react-native-async-storage/async-storage"] = false;
     return config;
   },
 };
