@@ -59,16 +59,16 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
 function ToastItem({ toast, onClose }: { toast: ToastData; onClose: () => void }) {
   const color =
     toast.variant === "success"
-      ? "border-[var(--color-primary)]/60"
+      ? "border-[var(--color-success)]/50"
       : toast.variant === "error"
-        ? "border-[var(--color-destructive)]/70"
+        ? "border-[var(--color-destructive)]/60"
         : "border-[var(--color-border)]";
 
   return (
     <div
       role="status"
       className={cn(
-        "pointer-events-auto flex w-full max-w-md items-start gap-3 rounded-md border bg-[var(--color-card)] p-4 text-sm shadow-lg",
+        "pointer-events-auto flex w-full max-w-md items-start gap-3 rounded-2xl border bg-[var(--color-card)] p-4 text-sm shadow-lg shadow-black/20 animate-in fade-in slide-in-from-bottom-2 duration-200",
         color,
       )}
     >

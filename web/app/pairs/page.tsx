@@ -3,7 +3,7 @@
 /**
  * Pairs 页面 —— 展示 Factory 里所有交易对
  *
- * 流程:
+ * 流程：
  *   1. factory.allPairsLength() 拿到总数
  *   2. 每个 index 调 factory.allPairs(i) 拿 pair 地址
  *   3. 每个 pair 调 token0/token1/getReserves 拿详情
@@ -30,7 +30,7 @@ export default function PairsPage() {
   });
   const len = Number((lenRaw as bigint | undefined) ?? 0n);
 
-  // 2) 所有 pair 地址(批量)
+  // 2) 所有 pair 地址（批量）
   const { data: pairAddrsRaw } = useReadContracts({
     contracts: factory && len > 0
       ? Array.from({ length: len }).map((_, i) => ({
@@ -51,7 +51,7 @@ export default function PairsPage() {
     <ConnectGuard ready={ready} reason={reason}>
       <div className="space-y-4">
         <div>
-          <h2 className="text-2xl font-semibold">交易对</h2>
+          <h2 className="text-2xl font-semibold tracking-tight">交易对</h2>
           <p className="text-sm text-[var(--color-muted-foreground)]">
             Factory: {factory ? shortAddr(factory) : "-"} · 共 {lenLoading ? "…" : len} 个
           </p>
@@ -87,7 +87,7 @@ function PairCard({ pair }: { pair: `0x${string}` }) {
   });
   const token0 = data?.[0]?.result as `0x${string}` | undefined;
   const token1 = data?.[1]?.result as `0x${string}` | undefined;
-  const reserves = data?.[2]?.result as readonly [bigint, bigint] | undefined;
+  const reserves = data?.[2]?.result as readonly [bigint, bigint, number] | undefined;
   const totalSupply = data?.[3]?.result as bigint | undefined;
 
   const sym0 = useSymbol(token0);
@@ -101,7 +101,7 @@ function PairCard({ pair }: { pair: `0x${string}` }) {
         </CardTitle>
         <CardDescription>pair {shortAddr(pair)}</CardDescription>
       </CardHeader>
-      <CardContent className="space-y-1 text-xs">
+      <CardContent className="space-y-1.5 text-xs">
         <Row
           label={`${sym0 ?? "token0"} 储备`}
           value={reserves ? formatUnits(reserves[0], 18) : "…"}
@@ -130,7 +130,7 @@ function Row({ label, value }: { label: string; value: React.ReactNode }) {
   return (
     <div className="flex items-center justify-between">
       <span className="text-[var(--color-muted-foreground)]">{label}</span>
-      <span className="font-medium">{value}</span>
+      <span className="font-medium tabular-nums">{value}</span>
     </div>
   );
 }

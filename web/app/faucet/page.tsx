@@ -3,7 +3,7 @@
 /**
  * Faucet 页面 —— 领 TKA / TKB 测试币
  *
- * 每个地址每种代币只能领一次(合约里存了 hasClaimed 映射)。
+ * 每个地址每种代币只能领一次（合约里存了 hasClaimed 映射）。
  */
 
 import * as React from "react";
@@ -28,7 +28,7 @@ export default function FaucetPage() {
         <div>
           <h2 className="text-2xl font-semibold">Faucet</h2>
           <p className="text-sm text-[var(--color-muted-foreground)]">
-            每个地址每种代币只能领一次,数量由合约常量 FAUCET_AMOUNT 决定。
+            每个地址每种代币只能领一次，数量由合约常量 FAUCET_AMOUNT 决定。
           </p>
         </div>
         <div className="grid gap-3 md:grid-cols-2">
@@ -90,13 +90,13 @@ function FaucetCard({ token }: { token: TokenInfo }) {
       <CardContent className="space-y-3 text-sm">
         <div className="flex items-center justify-between">
           <span className="text-[var(--color-muted-foreground)]">当前余额</span>
-          <span className="font-medium">
+          <span className="font-medium tabular-nums">
             {formatUnits(balance, token.decimals)} {token.symbol}
           </span>
         </div>
         <div className="flex items-center justify-between">
           <span className="text-[var(--color-muted-foreground)]">每次可领</span>
-          <span className="font-medium">
+          <span className="font-medium tabular-nums">
             {amountStr} {token.symbol}
           </span>
         </div>

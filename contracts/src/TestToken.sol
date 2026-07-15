@@ -6,21 +6,15 @@ import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 
 /**
  * @title TestToken
- * @notice 测试用 ERC20 代币。仅用于本地和测试网,主网部署绝对不要这么做!
+ * @notice 测试用 ERC20 代币，仅用于本地和测试网，主网部署绝对不要这么做！
  *
- * @dev 【提供两种铸币方式】
- *      1. faucet()  —— 任何地址都能领 FAUCET_AMOUNT(1000)个代币,
- *                      但每个地址每种代币只能领一次(靠 hasClaimed 映射记录)
- *      2. mint()    —— 只有 owner 能调,可以任意数量铸给任意地址,
- *                      方便部署脚本 / 测试搭初始场景
- *
- *      hasClaimed 是"地址 → 是否已领"的映射,一旦置为 true 就再也不能领了。
+ * @dev 两种铸币方式：
+ *      1. faucet() —— 任何地址都能领 FAUCET_AMOUNT 个代币，但每个地址每种代币只能领一次
+ *      2. mint()   —— 只有 owner 能调，方便部署脚本 / 测试搭初始场景
  */
 contract TestToken is ERC20, Ownable {
-    // 每次 faucet 领取的数量:1000 个,考虑 18 位小数就是 1000 * 1e18
     uint256 public constant FAUCET_AMOUNT = 1000 * 1e18;
 
-    // 记录某个地址是否已经领过 —— 只能领一次
     mapping(address => bool) public hasClaimed;
 
     event FaucetClaimed(address indexed user, uint256 amount);
@@ -29,7 +23,6 @@ contract TestToken is ERC20, Ownable {
         ERC20(name_, symbol_)
         Ownable(msg.sender)
     {
-        // 部署时可选是否给部署者铸一些初始供应,方便脚本自动加流动性
         if (initialSupply > 0) {
             _mint(msg.sender, initialSupply);
         }
@@ -40,7 +33,7 @@ contract TestToken is ERC20, Ownable {
         _mint(to, amount);
     }
 
-    /// @notice 领取水龙头奖励:每个地址每种代币只能调用一次
+    /// @notice 领取水龙头奖励：每个地址每种代币只能调用一次
     function faucet() external {
         require(!hasClaimed[msg.sender], "TestToken: ALREADY_CLAIMED");
         hasClaimed[msg.sender] = true;

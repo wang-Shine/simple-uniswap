@@ -37,7 +37,7 @@ export function TokenAmountInput({
   const balanceStr = balance !== undefined ? formatUnits(balance, decimals) : undefined;
 
   return (
-    <div className="space-y-2 rounded-md border border-[var(--color-border)] bg-[var(--color-input)] p-3">
+    <div className="space-y-2 rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-3 transition-colors duration-150 focus-within:border-[var(--color-primary)]/50">
       <div className="flex items-center justify-between">
         <Label>{label}</Label>
         {balanceStr !== undefined && (
@@ -45,7 +45,7 @@ export function TokenAmountInput({
             type="button"
             disabled={disabled || readOnly || !balance}
             onClick={() => balance && onAmountChange(formatUnits(balance, decimals))}
-            className="text-xs text-[var(--color-muted-foreground)] hover:text-[var(--color-foreground)] disabled:opacity-50"
+            className="cursor-pointer text-xs text-[var(--color-muted-foreground)] transition-colors hover:text-[var(--color-foreground)] disabled:cursor-not-allowed disabled:opacity-50"
           >
             余额: {balanceStr}
           </button>
@@ -65,7 +65,7 @@ export function TokenAmountInput({
             const norm = parts.length > 2 ? parts[0] + "." + parts.slice(1).join("") : v;
             onAmountChange(norm);
           }}
-          className="border-0 bg-transparent text-lg font-medium focus-visible:ring-0"
+          className="h-auto border-0 bg-transparent p-0 text-2xl font-medium tabular-nums focus-visible:ring-0"
         />
         <TokenSelect tokens={tokens} value={token} onChange={onTokenChange} disabled={disabled} />
       </div>

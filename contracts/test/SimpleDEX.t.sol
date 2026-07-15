@@ -10,11 +10,11 @@ import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 
 /**
  * @title SimpleDEX 全套测试
- * @notice 对应原 Hardhat 项目的 SimpleDEX.test.ts,逐条覆盖
+ * @notice 逐条覆盖设计文档里描述的核心场景
  *
  * 场景清单:
  *   TestToken   : faucet 只能领一次 / mint 权限
- *   Factory     : 创建 pair、token0 < token1、防重复、事件
+ *   Factory     : 创建 pair、token0 < token1、防重复
  *   addLiquidity: 首次公式 / 后续按比例 / 滑点保护 / deadline
  *   removeLiquidity: 按比例取回
  *   swap        : 单跳 + k 不变量 / 滑点 / 多跳
@@ -59,6 +59,11 @@ contract SimpleDEXTest is Test {
         vm.stopPrank();
     }
 
+    function _reserves(SimplePair pair) internal view returns (uint256 r0, uint256 r1) {
+        (uint112 _r0, uint112 _r1,) = pair.getReserves();
+        (r0, r1) = (_r0, _r1);
+    }
+
     // ==================== TestToken ====================
 
     function test_TestToken_FaucetOnlyOnce() public {
@@ -83,27 +88,28 @@ contract SimpleDEXTest is Test {
         factory.createPair(address(tokenA), address(tokenB));
         address pair = factory.getPair(address(tokenA), address(tokenB));
         assertTrue(pair != address(0), "pair should be created");
-        // A→B 和 B→A 双向都指向同一 pair
+        // A->B 和 B->A 双向都指向同一 pair
         assertEq(factory.getPair(address(tokenB), address(tokenA)), pair);
         assertEq(factory.allPairsLength(), 1);
+
+        SimplePair p = SimplePair(pair);
+        assertTrue(p.token0() < p.token1(), "token0 should be smaller address");
     }
 
     function test_Factory_RejectIdenticalTokens() public {
-        vm.expectRevert("SimpleFactory: IDENTICAL_ADDRESSES");
+        vm.expectRevert("Identical tokens");
         factory.createPair(address(tokenA), address(tokenA));
     }
 
     function test_Factory_RejectDuplicatePair() public {
         factory.createPair(address(tokenA), address(tokenB));
-        vm.expectRevert("SimpleFactory: PAIR_EXISTS");
+        vm.expectRevert("Pair exists");
         factory.createPair(address(tokenB), address(tokenA));
     }
 
     function test_Factory_EmitsPairCreated() public {
-        // 只校验事件的 topic 顺序(indexed 参数与签名),不校验 data
         vm.recordLogs();
         factory.createPair(address(tokenA), address(tokenB));
-        // getPair 命中即视为成功,expectEmit 有额外的排序要求这里简化
         assertTrue(factory.getPair(address(tokenA), address(tokenB)) != address(0));
     }
 
@@ -120,7 +126,7 @@ contract SimpleDEXTest is Test {
 
         address pairAddr = factory.getPair(address(tokenA), address(tokenB));
         SimplePair pair = SimplePair(pairAddr);
-        // sqrt(100e18 * 400e18) = 200e18,扣掉 MINIMUM_LIQUIDITY 1000
+        // sqrt(100e18 * 400e18) = 200e18, 扣掉 MINIMUM_LIQUIDITY 1000
         uint256 expectedLp = 200 ether - 1000;
         assertEq(pair.balanceOf(alice), expectedLp);
         assertEq(pair.balanceOf(address(0xdead)), 1000);
@@ -135,7 +141,7 @@ contract SimpleDEXTest is Test {
         vm.prank(alice);
         router.addLiquidity(address(tokenA), address(tokenB), 100 ether, 400 ether, 0, 0, alice, deadline);
 
-        // bob 想存 50 A : 1000 B,按比例 Router 只会收 50 A : 200 B
+        // bob 想存 50 A : 1000 B, 按比例 Router 只会收 50 A : 200 B
         uint256 beforeB = tokenB.balanceOf(bob);
         vm.prank(bob);
         router.addLiquidity(address(tokenA), address(tokenB), 50 ether, 1000 ether, 0, 0, bob, deadline);
@@ -150,20 +156,20 @@ contract SimpleDEXTest is Test {
         vm.prank(alice);
         router.addLiquidity(address(tokenA), address(tokenB), 100 ether, 400 ether, 0, 0, alice, deadline);
 
-        // 100 B 按比例只需要 25 A,如果 amountAMin = 50,应回滚
+        // 100 B 按比例只需要 25 A, 如果 amountAMin = 50, 应回滚
         vm.prank(alice);
-        vm.expectRevert("SimpleRouter: INSUFFICIENT_A_AMOUNT");
+        vm.expectRevert("Insufficient A");
         router.addLiquidity(address(tokenA), address(tokenB), 100 ether, 100 ether, 50 ether, 0, alice, deadline);
     }
 
     function test_AddLiquidity_RevertsOnExpiredDeadline() public {
         _approveAll(alice);
-        // 时间往前推 1 秒,让 deadline 过期
+        // 时间往前推, 让 deadline 过期
         vm.warp(1000);
         uint256 expired = block.timestamp - 1;
 
         vm.prank(alice);
-        vm.expectRevert("SimpleRouter: EXPIRED");
+        vm.expectRevert("Expired");
         router.addLiquidity(address(tokenA), address(tokenB), 100 ether, 400 ether, 0, 0, alice, expired);
     }
 
@@ -192,7 +198,7 @@ contract SimpleDEXTest is Test {
         uint256 afterA = tokenA.balanceOf(alice);
         uint256 afterB = tokenB.balanceOf(alice);
 
-        // MINIMUM_LIQUIDITY 永远锁定,允许极小误差
+        // MINIMUM_LIQUIDITY 永远锁定, 允许极小误差
         assertApproxEqAbs(afterA - beforeA, 100 ether, 0.001 ether);
         assertApproxEqAbs(afterB - beforeB, 400 ether, 0.001 ether);
     }
@@ -209,7 +215,7 @@ contract SimpleDEXTest is Test {
 
         address pairAddr = factory.getPair(address(tokenA), address(tokenB));
         SimplePair pair = SimplePair(pairAddr);
-        (uint256 r0Before, uint256 r1Before) = pair.getReserves();
+        (uint256 r0Before, uint256 r1Before) = _reserves(pair);
         uint256 kBefore = r0Before * r1Before;
 
         uint256 amountIn = 10 ether;
@@ -225,7 +231,7 @@ contract SimpleDEXTest is Test {
         uint256 balAfter = tokenB.balanceOf(bob);
         assertEq(balAfter - balBefore, expectedOut);
 
-        (uint256 r0After, uint256 r1After) = pair.getReserves();
+        (uint256 r0After, uint256 r1After) = _reserves(pair);
         assertGe(r0After * r1After, kBefore, "k should not decrease");
     }
 
@@ -242,7 +248,7 @@ contract SimpleDEXTest is Test {
         path[1] = address(tokenB);
 
         vm.prank(bob);
-        vm.expectRevert("SimpleRouter: INSUFFICIENT_OUTPUT_AMOUNT");
+        vm.expectRevert("Insufficient output");
         router.swapExactTokensForTokens(10 ether, 100 ether, path, bob, deadline);
     }
 
@@ -311,7 +317,7 @@ contract SimpleDEXTest is Test {
         path[1] = address(tokenB);
 
         vm.prank(bob);
-        vm.expectRevert("SimpleRouter: EXCESSIVE_INPUT_AMOUNT");
+        vm.expectRevert("Excessive input");
         router.swapTokensForExactTokens(10 ether, 1 ether, path, bob, deadline);
     }
 }

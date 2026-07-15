@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { ArrowDownUp } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -92,7 +93,7 @@ export default function SwapPage() {
         <Card>
           <CardHeader>
             <CardTitle>Swap</CardTitle>
-            <CardDescription>x·y=k 恒定乘积,含 0.3% 手续费</CardDescription>
+            <CardDescription>x·y=k 恒定乘积，含 0.3% 手续费</CardDescription>
           </CardHeader>
           <CardContent className="space-y-3">
             <TokenAmountInput
@@ -113,9 +114,10 @@ export default function SwapPage() {
               <button
                 type="button"
                 onClick={flip}
-                className="rounded-md border border-[var(--color-border)] bg-[var(--color-card)] px-3 py-1 text-xs hover:bg-[var(--color-accent)]"
+                aria-label="交换代币方向"
+                className="cursor-pointer rounded-xl border border-[var(--color-border)] bg-[var(--color-card)] p-2 text-[var(--color-muted-foreground)] transition-colors duration-150 hover:border-[var(--color-primary)]/50 hover:text-[var(--color-primary)]"
               >
-                ↑↓
+                <ArrowDownUp className="h-4 w-4" />
               </button>
             </div>
 
@@ -134,7 +136,7 @@ export default function SwapPage() {
               readOnly
             />
 
-            <div className="flex items-center justify-between gap-2 rounded-md border border-[var(--color-border)] bg-[var(--color-input)] p-3 text-xs">
+            <div className="flex items-center justify-between gap-2 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] p-3 text-xs">
               <Label className="normal-case tracking-normal">滑点</Label>
               <div className="flex items-center gap-2">
                 <Input
@@ -147,7 +149,7 @@ export default function SwapPage() {
               </div>
             </div>
 
-            <div className="space-y-1 rounded-md bg-[var(--color-input)] p-3 text-xs">
+            <div className="space-y-1.5 rounded-xl bg-[var(--color-surface)] p-3 text-xs">
               <Row
                 label="最少收到"
                 value={`${formatUnits(amountOutMin, outInfo?.decimals ?? 18)} ${outInfo?.symbol ?? ""}`}
@@ -185,7 +187,7 @@ function Row({ label, value }: { label: string; value: React.ReactNode }) {
   return (
     <div className="flex items-center justify-between">
       <span className="text-[var(--color-muted-foreground)]">{label}</span>
-      <span className="font-medium">{value}</span>
+      <span className="font-medium tabular-nums">{value}</span>
     </div>
   );
 }

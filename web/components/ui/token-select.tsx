@@ -27,8 +27,8 @@ export function TokenSelect({
       disabled={disabled || tokens.length === 0}
       onChange={(e) => onChange(e.target.value as `0x${string}`)}
       className={cn(
-        "h-10 min-w-24 rounded-md border border-[var(--color-border)] bg-[var(--color-input)] px-3 text-sm",
-        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring)]",
+        "h-11 min-w-24 cursor-pointer rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] px-3 text-sm font-medium",
+        "transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring)]",
         "disabled:cursor-not-allowed disabled:opacity-50",
         className,
       )}

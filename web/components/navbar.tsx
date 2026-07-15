@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { cn } from "@/lib/utils";
 
 const NAV = [
@@ -16,8 +15,8 @@ export function Navbar() {
   const pathname = usePathname();
 
   return (
-    <header className="sticky top-0 z-30 border-b border-[var(--color-border)] bg-[var(--color-background)]/80 backdrop-blur">
-      <div className="mx-auto flex h-14 max-w-6xl items-center gap-6 px-4">
+    <header className="sticky top-0 z-30 border-b border-[var(--color-border)] bg-[var(--color-background)]/80 backdrop-blur-md">
+      <div className="mx-auto flex h-16 max-w-6xl items-center gap-6 px-4">
         <Link href="/" className="text-base font-semibold tracking-tight">
           Simple<span className="text-[var(--color-primary)]">DEX</span>
         </Link>
@@ -29,7 +28,7 @@ export function Navbar() {
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  "rounded-md px-3 py-1.5 text-sm transition-colors",
+                  "rounded-xl px-3 py-1.5 text-sm transition-colors duration-150",
                   active
                     ? "bg-[var(--color-accent)] text-[var(--color-accent-foreground)]"
                     : "text-[var(--color-muted-foreground)] hover:text-[var(--color-foreground)]",
@@ -40,7 +39,7 @@ export function Navbar() {
             );
           })}
         </nav>
-        <ConnectButton showBalance={false} chainStatus="icon" accountStatus="address" />
+        <appkit-button />
       </div>
     </header>
   );

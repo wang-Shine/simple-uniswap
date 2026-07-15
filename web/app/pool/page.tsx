@@ -33,7 +33,7 @@ export default function PoolPage() {
         <Card>
           <CardHeader>
             <CardTitle>Pool</CardTitle>
-            <CardDescription>做 LP 拿手续费收入,注意无常损失</CardDescription>
+            <CardDescription>做 LP 拿手续费收入，注意无常损失</CardDescription>
           </CardHeader>
           <CardContent>
             <Tabs defaultValue="add">
@@ -173,12 +173,12 @@ function AddLiquidity() {
 
       <SlippageInput value={slippage} onChange={setSlippage} />
 
-      <div className="space-y-1 rounded-md bg-[var(--color-input)] p-3 text-xs">
+      <div className="space-y-1.5 rounded-xl bg-[var(--color-surface)] p-3 text-xs">
         <Row
           label="池子状态"
           value={poolExists
             ? `${formatUnits(reserveA, aInfo?.decimals ?? 18)} / ${formatUnits(reserveB, bInfo?.decimals ?? 18)}`
-            : "首次加池,两种数量决定初始价格"}
+            : "首次加池，两种数量决定初始价格"}
         />
       </div>
 
@@ -266,14 +266,14 @@ function RemoveLiquidity() {
 
   return (
     <div className="space-y-3">
-      <div className="space-y-2 rounded-md border border-[var(--color-border)] bg-[var(--color-input)] p-3">
+      <div className="space-y-2 rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-3 transition-colors duration-150 focus-within:border-[var(--color-primary)]/50">
         <div className="flex items-center justify-between">
           <Label>要 burn 的 LP</Label>
           <button
             type="button"
             onClick={() => setLiquidity(formatUnits(lpBalance, 18))}
             disabled={lpBalance === 0n}
-            className="text-xs text-[var(--color-muted-foreground)] hover:text-[var(--color-foreground)] disabled:opacity-50"
+            className="cursor-pointer text-xs text-[var(--color-muted-foreground)] transition-colors hover:text-[var(--color-foreground)] disabled:cursor-not-allowed disabled:opacity-50"
           >
             余额: {formatUnits(lpBalance, 18)}
           </button>
@@ -283,13 +283,13 @@ function RemoveLiquidity() {
           placeholder="0.0"
           value={liquidity}
           onChange={(e) => setLiquidity(e.target.value.replace(/[^0-9.]/g, ""))}
-          className="border-0 bg-transparent text-lg font-medium focus-visible:ring-0"
+          className="h-auto border-0 bg-transparent p-0 text-2xl font-medium tabular-nums focus-visible:ring-0"
         />
       </div>
 
       <SlippageInput value={slippage} onChange={setSlippage} />
 
-      <div className="space-y-1 rounded-md bg-[var(--color-input)] p-3 text-xs">
+      <div className="space-y-1.5 rounded-xl bg-[var(--color-surface)] p-3 text-xs">
         <Row
           label={`预计取回 ${aInfo?.symbol ?? "A"}`}
           value={formatUnits(expectedA, aInfo?.decimals ?? 18)}
@@ -317,7 +317,7 @@ function RemoveLiquidity() {
 
 function SlippageInput({ value, onChange }: { value: string; onChange: (v: string) => void }) {
   return (
-    <div className="flex items-center justify-between gap-2 rounded-md border border-[var(--color-border)] bg-[var(--color-input)] p-3 text-xs">
+    <div className="flex items-center justify-between gap-2 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] p-3 text-xs">
       <Label className="normal-case tracking-normal">滑点</Label>
       <div className="flex items-center gap-2">
         <Input
@@ -336,7 +336,7 @@ function Row({ label, value }: { label: string; value: React.ReactNode }) {
   return (
     <div className="flex items-center justify-between">
       <span className="text-[var(--color-muted-foreground)]">{label}</span>
-      <span className="font-medium">{value}</span>
+      <span className="font-medium tabular-nums">{value}</span>
     </div>
   );
 }

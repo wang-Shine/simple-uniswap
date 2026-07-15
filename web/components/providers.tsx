@@ -3,11 +3,32 @@
 import * as React from "react";
 import { WagmiProvider } from "wagmi";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { RainbowKitProvider, darkTheme } from "@rainbow-me/rainbowkit";
-import { wagmiConfig, defaultChain } from "@/lib/wagmi";
+import { createAppKit } from "@reown/appkit/react";
+import { wagmiAdapter, projectId, networks, defaultChain } from "@/lib/wagmi";
 import { ToastProvider } from "@/components/ui/toast";
 
-import "@rainbow-me/rainbowkit/styles.css";
+// 站点 URL 会传给钱包端显示"你正在连接谁"
+const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
+
+// AppKit 是单例,只能初始化一次,放在模块顶层执行
+createAppKit({
+  adapters: [wagmiAdapter],
+  projectId,
+  networks: [...networks],
+  defaultNetwork: defaultChain,
+  metadata: {
+    name: "SimpleDEX",
+    description: "简化版 Uniswap V2 学习项目",
+    url: appUrl,
+    icons: [],
+  },
+  features: {
+    analytics: false,
+    email: false,
+    socials: false,
+  },
+  themeMode: "dark",
+});
 
 export function Providers({ children }: { children: React.ReactNode }) {
   const [queryClient] = React.useState(
@@ -23,19 +44,9 @@ export function Providers({ children }: { children: React.ReactNode }) {
   );
 
   return (
-    <WagmiProvider config={wagmiConfig}>
+    <WagmiProvider config={wagmiAdapter.wagmiConfig}>
       <QueryClientProvider client={queryClient}>
-        <RainbowKitProvider
-          theme={darkTheme({
-            accentColor: "oklch(0.696 0.17 162.48)",
-            accentColorForeground: "#000",
-            borderRadius: "medium",
-          })}
-          modalSize="compact"
-          initialChain={defaultChain}
-        >
-          <ToastProvider>{children}</ToastProvider>
-        </RainbowKitProvider>
+        <ToastProvider>{children}</ToastProvider>
       </QueryClientProvider>
     </WagmiProvider>
   );

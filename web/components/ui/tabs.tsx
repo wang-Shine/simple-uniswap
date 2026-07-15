@@ -64,7 +64,7 @@ export function TabsList({
   return (
     <div
       className={cn(
-        "inline-flex items-center justify-center rounded-md bg-[var(--color-muted)] p-1 text-[var(--color-muted-foreground)]",
+        "inline-flex items-center justify-center rounded-xl bg-[var(--color-muted)] p-1 text-[var(--color-muted-foreground)]",
         className,
       )}
       role="tablist"
@@ -93,10 +93,10 @@ export function TabsTrigger({
       data-state={active ? "active" : "inactive"}
       onClick={() => setValue(value)}
       className={cn(
-        "inline-flex min-w-24 items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium transition-colors",
+        "inline-flex min-w-24 cursor-pointer items-center justify-center whitespace-nowrap rounded-lg px-3 py-1.5 text-sm font-medium transition-colors duration-150",
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring)]",
         active
-          ? "bg-[var(--color-card)] text-[var(--color-foreground)] shadow-sm"
+          ? "bg-[var(--color-card)] text-[var(--color-foreground)] shadow-[0_1px_0_0_rgba(255,255,255,0.06)_inset]"
           : "hover:text-[var(--color-foreground)]",
         className,
       )}

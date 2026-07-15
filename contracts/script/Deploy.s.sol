@@ -9,12 +9,12 @@ import {SimplePair} from "../src/SimplePair.sol";
 
 /**
  * @title Deploy
- * @notice 一键部署:两个测试代币 + Factory + Router + 初始流动性(1000:1000)
+ * @notice 一键部署：两个测试代币 + Factory + Router + 初始流动性（1000:1000）
  *
- * 用法:
- *   Sepolia:    forge script script/Deploy.s.sol --rpc-url sepolia --broadcast --verify -vvvv
+ * 用法：
+ *   forge script script/Deploy.s.sol --rpc-url sepolia --broadcast --verify -vvvv
  *
- * 部署完把打印出的地址复制到 web/lib/addresses.ts
+ * 部署完把打印出的地址填到 web/lib/addresses.ts
  */
 contract Deploy is Script {
     function run() external {
@@ -25,17 +25,13 @@ contract Deploy is Script {
 
         vm.startBroadcast(pk);
 
-        // 1. 部署测试代币
+        // 1. 部署测试代币，给部署者铸一些初始供应用于建池
         TestToken tka = new TestToken("Token A", "TKA", 10_000 ether);
         TestToken tkb = new TestToken("Token B", "TKB", 10_000 ether);
-        console2.log("TKA:", address(tka));
-        console2.log("TKB:", address(tkb));
 
         // 2. Factory + Router
         SimpleFactory factory = new SimpleFactory(deployer);
         SimpleRouter router = new SimpleRouter(address(factory));
-        console2.log("Factory:", address(factory));
-        console2.log("Router :", address(router));
 
         // 3. 建 pair + 初始流动性
         tka.approve(address(router), type(uint256).max);
@@ -43,8 +39,16 @@ contract Deploy is Script {
         router.addLiquidity(
             address(tka), address(tkb), 1_000 ether, 1_000 ether, 0, 0, deployer, block.timestamp + 3600
         );
-        console2.log("Pair:", factory.getPair(address(tka), address(tkb)));
+        address pair = factory.getPair(address(tka), address(tkb));
 
         vm.stopBroadcast();
+
+        console2.log("");
+        console2.log("=== Deployment Summary ===");
+        console2.log("TKA:     ", address(tka));
+        console2.log("TKB:     ", address(tkb));
+        console2.log("Factory: ", address(factory));
+        console2.log("Router:  ", address(router));
+        console2.log("Pair:    ", pair);
     }
 }

@@ -24,7 +24,7 @@ web/
 │   ├── pairs/             # 所有 pair 列表
 │   └── faucet/            # 领测试币
 ├── components/
-│   ├── providers.tsx      # wagmi + react-query + RainbowKit
+│   ├── providers.tsx      # wagmi + react-query + Reown AppKit
 │   ├── navbar.tsx         # 顶栏
 │   ├── connect-guard.tsx  # 未连接钱包 / 未部署时的占位
 │   ├── token-amount-input.tsx  # 金额 + token 下拉
@@ -62,7 +62,7 @@ NEXT_PUBLIC_REOWN_PROJECT_ID=YOUR_PROJECT_ID   # https://cloud.reown.com
 NEXT_PUBLIC_SEPOLIA_RPC=                       # 可选,覆盖默认公共节点
 ```
 
-不填 projectId 也能跑,但不推荐(RainbowKit 会警告)。
+不填 projectId 也能跑,但不推荐(AppKit 会警告)。
 
 ## 交互流程速查
 

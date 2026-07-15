@@ -76,8 +76,9 @@ export const SIMPLE_PAIR_ABI = [
     stateMutability: "view",
     inputs: [],
     outputs: [
-      { name: "_reserve0", type: "uint256" },
-      { name: "_reserve1", type: "uint256" },
+      { name: "_reserve0", type: "uint112" },
+      { name: "_reserve1", type: "uint112" },
+      { name: "_blockTimestampLast", type: "uint32" },
     ],
   },
   {
