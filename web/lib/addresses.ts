@@ -17,11 +17,11 @@ const ZERO: Deployment = {
 // 跑完 `forge script script/Deploy.s.sol --broadcast ...` 后,
 // 把打印出的地址填到下面对应的链里
 const SEPOLIA_DEPLOYMENT: Deployment = {
-  factory: "0x7981b367Ff8E16Cc63c625B71e7eBBC295473015",
-  router: "0xe832d83D8cC64F705cD15853145bee0691a2a653",
-  pair: "0xde8B69Dd6DCA014381205eFb8c04600Dc6B3D536",
-  tka: "0xC1bCB51628E5387589ed0Ef407141296e4Bbf5fF",
-  tkb: "0x6bF6B3f96dA72E507743a6764d1463c4622E0AdE",
+  factory: "0x7981b367Ff8E16Cc63c625B71e7eBBC295473015", // SimpleFactory: 创建/记录交易对
+  router: "0xe832d83D8cC64F705cD15853145bee0691a2a653", // SimpleRouter: 加/移除流动性、swap 的入口
+  pair: "0xde8B69Dd6DCA014381205eFb8c04600Dc6B3D536", // SimplePair(TKA/TKB): 资金池,持有储备
+  tka: "0xC1bCB51628E5387589ed0Ef407141296e4Bbf5fF", // TestToken A
+  tkb: "0x6bF6B3f96dA72E507743a6764d1463c4622E0AdE", // TestToken B
 };
 
 const DEPLOYMENTS: Record<number, Deployment> = {
